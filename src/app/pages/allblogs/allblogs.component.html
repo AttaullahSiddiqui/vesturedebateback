@@ -1,0 +1,1276 @@
+<nb-card>
+  <nb-card-header>
+    Total Blogs on Website &nbsp;&nbsp;
+    <button nbButton status="primary" size="medium">
+      {{ blogsCount }}
+    </button></nb-card-header
+  >
+  <nb-card-body>
+    <ng2-smart-table
+      [settings]="settings"
+      [source]="source"
+      (edit)="openEditForm($event, blogEditModal)"
+      (delete)="openDeletePrompt($event)"
+    >
+    </ng2-smart-table>
+  </nb-card-body>
+</nb-card>
+
+<ng-template #blogEditModal let-data>
+  <!-- <h2>Hello from modal</h2> -->
+  <form
+    #editBlogForm="ngForm"
+    novalidate
+    (ngSubmit)="saveEditedBlog(editObject)"
+  >
+    <div class="form-group row">
+      <label for="title" class="label col-sm-3 col-form-label">Title</label>
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          required
+          name="title"
+          [(ngModel)]="editObject.title"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="categoryRef" class="label col-sm-3 col-form-label"
+        >Choose Categories</label
+      >
+      <div class="col-sm-9">
+        <ng-select
+          [items]="categories"
+          name="categoryRef"
+          [multiple]="true"
+          [closeOnSelect]="true"
+          [searchable]="true"
+          bindLabel="name"
+          bindValue="_id"
+          [hideSelected]="true"
+          placeholder="Select Category"
+          [(ngModel)]="editObject.categoryRef"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="shortDes" class="label col-sm-3 col-form-label"
+        >Short Description</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          [required]="true"
+          name="shortDes"
+          [(ngModel)]="editObject.shortDes"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesFirst" class="label col-sm-3 col-form-label"
+        >Start Content</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          [required]="true"
+          name="longDesFirst"
+          [(ngModel)]="editObject.longDesFirst"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesMiddle1" class="label col-sm-3 col-form-label"
+        >Middle Description 1</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          name="longDesMiddle1"
+          [(ngModel)]="editObject.longDesMiddle1"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img
+          [src]="editObject.imgGrid1"
+          class="marginAuto"
+          style="max-width: 50%"
+        />
+      </div>
+    </div>
+    <br />
+    <div class="row" *ngIf="croppedImage1">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage1" class="marginAuto" />
+      </div>
+      <br />
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label"
+        >Image for Section 1</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event, 1)"
+          [(ngModel)]="imgModel1"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+        />
+        <label class="custom-file-label"
+          >{{ htmlContent }}{{ imgModel1 }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      *ngIf="imgModel1"
+      [imageChangedEvent]="imageChangedEvent1"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="2 / 3"
+      outputType="file"
+      format="jpeg"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event, 1)"
+    >
+    </image-cropper>
+    <br />
+    <div class="form-group row">
+      <label for="amazonLink1" class="label col-sm-3 col-form-label"
+        >Tracking Link 1</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="amazonLink1"
+          [(ngModel)]="editObject.amazonLink1"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pros1" class="label col-sm-3 col-form-label">Pros 1</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.pros1"
+          name="pros1"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="cons1" class="label col-sm-3 col-form-label">Cons 1</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.cons1"
+          name="cons1"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesMiddle2" class="label col-sm-3 col-form-label"
+        >Middle Description 2</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          name="longDesMiddle2"
+          [(ngModel)]="editObject.longDesMiddle2"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img
+          [src]="editObject.imgGrid2"
+          class="marginAuto"
+          style="max-width: 50%"
+        />
+      </div>
+    </div>
+    <br />
+    <div class="row" *ngIf="croppedImage2">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage2" class="marginAuto" />
+      </div>
+      <br />
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label"
+        >Image for Section 2</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event, 2)"
+          [(ngModel)]="imgModel2"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+        />
+        <label class="custom-file-label"
+          >{{ htmlContent }}{{ imgModel2 }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      *ngIf="imgModel2"
+      [imageChangedEvent]="imageChangedEvent2"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="2 / 3"
+      outputType="file"
+      format="jpeg"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event, 2)"
+    >
+    </image-cropper>
+    <br />
+    <div class="form-group row">
+      <label for="amazonLink2" class="label col-sm-3 col-form-label"
+        >Tracking Link 2</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="amazonLink2"
+          [(ngModel)]="editObject.amazonLink2"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pros2" class="label col-sm-3 col-form-label">Pros 2</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.pros2"
+          name="pros2"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="cons2" class="label col-sm-3 col-form-label">Cons 2</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.cons2"
+          name="cons2"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesMiddle3" class="label col-sm-3 col-form-label"
+        >Middle Description 3</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          name="longDesMiddle3"
+          [(ngModel)]="editObject.longDesMiddle3"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img
+          [src]="editObject.imgGrid3"
+          class="marginAuto"
+          style="max-width: 50%"
+        />
+      </div>
+    </div>
+    <br />
+    <div class="row" *ngIf="croppedImage3">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage3" class="marginAuto" />
+      </div>
+      <br />
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label"
+        >Image for Section 3</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event, 3)"
+          [(ngModel)]="imgModel3"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+        />
+        <label class="custom-file-label"
+          >{{ htmlContent }}{{ imgModel3 }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      *ngIf="imgModel3"
+      [imageChangedEvent]="imageChangedEvent3"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="2 / 3"
+      outputType="file"
+      format="jpeg"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event, 3)"
+    >
+    </image-cropper>
+    <div class="form-group row">
+      <label for="amazonLink3" class="label col-sm-3 col-form-label"
+        >Tracking Link 3</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="amazonLink3"
+          [(ngModel)]="editObject.amazonLink3"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pros3" class="label col-sm-3 col-form-label">Pros 3</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.pros3"
+          name="pros3"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="cons3" class="label col-sm-3 col-form-label">Cons 3</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.cons3"
+          name="cons3"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesMiddle4" class="label col-sm-3 col-form-label"
+        >Middle Description 4</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          name="longDesMiddle4"
+          [(ngModel)]="editObject.longDesMiddle4"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img
+          [src]="editObject.imgGrid4"
+          class="marginAuto"
+          style="max-width: 50%"
+        />
+      </div>
+    </div>
+    <br />
+    <div class="row" *ngIf="croppedImage4">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage4" class="marginAuto" />
+      </div>
+      <br />
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label"
+        >Image for Section 4</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event, 4)"
+          [(ngModel)]="imgModel4"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+        />
+        <label class="custom-file-label"
+          >{{ htmlContent }}{{ imgModel4 }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      *ngIf="imgModel4"
+      [imageChangedEvent]="imageChangedEvent4"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="2 / 3"
+      outputType="file"
+      format="jpeg"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event, 4)"
+    >
+    </image-cropper>
+    <br />
+    <div class="form-group row">
+      <label for="amazonLink4" class="label col-sm-3 col-form-label"
+        >Tracking Link 4</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="amazonLink4"
+          [(ngModel)]="editObject.amazonLink4"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pros4" class="label col-sm-3 col-form-label">Pros 4</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.pros4"
+          name="pros4"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="cons4" class="label col-sm-3 col-form-label">Cons 4</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.cons4"
+          name="cons4"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesMiddle5" class="label col-sm-3 col-form-label"
+        >Middle Description 5</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          name="longDesMiddle5"
+          [(ngModel)]="editObject.longDesMiddle5"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img
+          [src]="editObject.imgGrid5"
+          class="marginAuto"
+          style="max-width: 50%"
+        />
+      </div>
+    </div>
+    <div class="row" *ngIf="croppedImage5">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage5" class="marginAuto" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label"
+        >Image for Section 5</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event, 5)"
+          [(ngModel)]="imgModel5"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+        />
+        <label class="custom-file-label"
+          >{{ htmlContent }}{{ imgModel5 }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent5"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="2 / 3"
+      outputType="file"
+      format="jpeg"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event, 5)"
+    >
+    </image-cropper>
+    <div class="form-group row">
+      <label for="amazonLink5" class="label col-sm-3 col-form-label"
+        >Tracking Link 5</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="amazonLink5"
+          [(ngModel)]="editObject.amazonLink5"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pros5" class="label col-sm-3 col-form-label">Pros 5</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.pros5"
+          name="pros5"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="cons5" class="label col-sm-3 col-form-label">Cons 5</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.cons5"
+          name="cons5"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesMiddle6" class="label col-sm-3 col-form-label"
+        >Middle Description 6</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          name="longDesMiddle6"
+          [(ngModel)]="editObject.longDesMiddle6"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img
+          [src]="editObject.imgGrid6"
+          class="marginAuto"
+          style="max-width: 50%"
+        />
+      </div>
+    </div>
+    <div class="row" *ngIf="croppedImage6">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage6" class="marginAuto" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label"
+        >Image for Section 6</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event, 6)"
+          [(ngModel)]="imgModel6"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+        />
+        <label class="custom-file-label"
+          >{{ htmlContent }}{{ imgModel6 }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent6"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="2 / 3"
+      outputType="file"
+      format="jpeg"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event, 6)"
+    >
+    </image-cropper>
+    <div class="form-group row">
+      <label for="amazonLink6" class="label col-sm-3 col-form-label"
+        >Tracking Link 6</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="amazonLink6"
+          [(ngModel)]="editObject.amazonLink6"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pros6" class="label col-sm-3 col-form-label">Pros 6</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.pros6"
+          name="pros6"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="cons6" class="label col-sm-3 col-form-label">Cons 6</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.cons6"
+          name="cons6"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesMiddle7" class="label col-sm-3 col-form-label"
+        >Middle Description 7</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          name="longDesMiddle7"
+          [(ngModel)]="editObject.longDesMiddle7"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img
+          [src]="editObject.imgGrid7"
+          class="marginAuto"
+          style="max-width: 50%"
+        />
+      </div>
+    </div>
+    <div class="row" *ngIf="croppedImage7">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage7" class="marginAuto" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label"
+        >Image for Section 7</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event, 7)"
+          [(ngModel)]="imgModel7"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+        />
+        <label class="custom-file-label"
+          >{{ htmlContent }}{{ imgModel7 }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent7"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="2 / 3"
+      outputType="file"
+      format="jpeg"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event, 7)"
+    >
+    </image-cropper>
+    <div class="form-group row">
+      <label for="amazonLink7" class="label col-sm-3 col-form-label"
+        >Tracking Link 7</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="amazonLink7"
+          [(ngModel)]="editObject.amazonLink7"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pros7" class="label col-sm-3 col-form-label">Pros 7</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.pros7"
+          name="pros7"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="cons7" class="label col-sm-3 col-form-label">Cons 7</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.cons7"
+          name="cons7"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesMiddle8" class="label col-sm-3 col-form-label"
+        >Middle Description 8</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          name="longDesMiddle8"
+          [(ngModel)]="editObject.longDesMiddle8"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img
+          [src]="editObject.imgGrid8"
+          class="marginAuto"
+          style="max-width: 50%"
+        />
+      </div>
+    </div>
+    <div class="row" *ngIf="croppedImage8">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage8" class="marginAuto" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label"
+        >Image for Section 8</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event, 8)"
+          [(ngModel)]="imgModel8"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+        />
+        <label class="custom-file-label"
+          >{{ htmlContent }}{{ imgModel8 }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent8"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="2 / 3"
+      outputType="file"
+      format="jpeg"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event, 8)"
+    >
+    </image-cropper>
+    <div class="form-group row">
+      <label for="amazonLink8" class="label col-sm-3 col-form-label"
+        >Tracking Link 8</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="amazonLink8"
+          [(ngModel)]="editObject.amazonLink8"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pros8" class="label col-sm-3 col-form-label">Pros 8</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.pros8"
+          name="pros8"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="cons8" class="label col-sm-3 col-form-label">Cons 8</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.cons8"
+          name="cons8"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesMiddle9" class="label col-sm-3 col-form-label"
+        >Middle Description 9</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          name="longDesMiddle9"
+          [(ngModel)]="editObject.longDesMiddle9"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img
+          [src]="editObject.imgGrid9"
+          class="marginAuto"
+          style="max-width: 50%"
+        />
+      </div>
+    </div>
+    <div class="row" *ngIf="croppedImage9">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage9" class="marginAuto" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label"
+        >Image for Section 9</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event, 9)"
+          [(ngModel)]="imgModel9"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+        />
+        <label class="custom-file-label"
+          >{{ htmlContent }}{{ imgModel9 }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent9"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="2 / 3"
+      outputType="file"
+      format="jpeg"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event, 9)"
+    >
+    </image-cropper>
+    <div class="form-group row">
+      <label for="amazonLink9" class="label col-sm-3 col-form-label"
+        >Tracking Link 9</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="amazonLink9"
+          [(ngModel)]="editObject.amazonLink9"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pros9" class="label col-sm-3 col-form-label">Pros 9</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.pros9"
+          name="pros9"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="cons9" class="label col-sm-3 col-form-label">Cons 9</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.cons9"
+          name="cons9"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesMiddle10" class="label col-sm-3 col-form-label"
+        >Middle Description 10</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          name="longDesMiddle10"
+          [(ngModel)]="editObject.longDesMiddle10"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img
+          [src]="editObject.imgGrid10"
+          class="marginAuto"
+          style="max-width: 50%"
+        />
+      </div>
+    </div>
+    <div class="row" *ngIf="croppedImage10">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage10" class="marginAuto" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label"
+        >Image for Section 10</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event, 10)"
+          [(ngModel)]="imgModel10"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+        />
+        <label class="custom-file-label"
+          >{{ htmlContent }}{{ imgModel10 }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent10"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="2 / 3"
+      outputType="file"
+      format="jpeg"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event, 10)"
+    >
+    </image-cropper>
+    <div class="form-group row">
+      <label for="amazonLink10" class="label col-sm-3 col-form-label"
+        >Tracking Link 10</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="amazonLink10"
+          [(ngModel)]="editObject.amazonLink10"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pros10" class="label col-sm-3 col-form-label">Pros 10</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.pros10"
+          name="pros10"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="cons10" class="label col-sm-3 col-form-label">Cons 10</label>
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [addTag]="true"
+          [(ngModel)]="editObject.cons10"
+          name="cons10"
+          [items]="dummyArr"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="longDesLast" class="label col-sm-3 col-form-label"
+        >End Content</label
+      >
+      <div class="col-sm-9">
+        <ckeditor
+          [editor]="Editor"
+          [config]="ckConfig"
+          name="longDesLast"
+          [(ngModel)]="editObject.longDesLast"
+        ></ckeditor>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="editObject.img" class="marginAuto" style="width: 50vw" />
+      </div>
+    </div>
+    <br />
+    <div class="row" *ngIf="croppedImage">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage" class="marginAuto" />
+        <br />
+        <br />
+        <button
+          nbButton
+          status="danger"
+          size="medium"
+          (click)="clearCroppedImage()"
+        >
+          Clear
+        </button>
+        <br />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label"
+        >Main Image for Blog</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event)"
+          [(ngModel)]="imgModel"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+        />
+        <label class="custom-file-label" for="inputGroupFile01"
+          >{{ htmlContent }}{{ imgModel }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      *ngIf="imgModel"
+      [imageChangedEvent]="imageChangedEvent"
+      [maintainAspectRatio]="true"
+      [aspectRatio]="2 / 1"
+      format="jpeg"
+      [imageQuality]="100"
+      (imageCropped)="imageCropped($event)"
+    >
+    </image-cropper>
+    <div class="form-group row">
+      <label for="imgAlt" class="label col-sm-3 col-form-label"
+        >Image Alt</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="imgAlt"
+          required
+          [(ngModel)]="editObject.imgAlt"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="buttonTxt" class="label col-sm-3 col-form-label"
+        >Button Text</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="buttonTxt"
+          placeholder="Add Text to be displayed on Button.."
+          [(ngModel)]="editObject.buttonTxt"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="metaTitle" class="label col-sm-3 col-form-label"
+        >Meta Title</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="metaTitle"
+          required
+          [(ngModel)]="editObject.metaTitle"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="metaDes" class="label col-sm-3 col-form-label"
+        >Meta Description</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="metaDes"
+          required
+          [(ngModel)]="editObject.metaDes"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="metaKeywords" class="label col-sm-3 col-form-label"
+        >Meta Keywords</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="metaKeywords"
+          required
+          [(ngModel)]="editObject.metaKeywords"
+        />
+      </div>
+    </div>
+    <div class="form-group row" *ngIf="stores">
+      <label for="assignedStore" class="label col-sm-3 col-form-label"
+        >Select Store</label
+      >
+      <div class="col-sm-9">
+        <ng-select
+          name="assignedStore"
+          [closeOnSelect]="true"
+          [searchable]="true"
+          [hideSelected]="true"
+          [(ngModel)]="editObject.storeId"
+        >
+          <ng-option
+            [value]="item.value._id"
+            *ngFor="let item of stores | keyvalue | sortStores"
+          >
+            {{ item.value.name }}
+          </ng-option>
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row" *ngIf="stores">
+      <label for="assignedStore" class="label col-sm-3 col-form-label"
+        >Related Stores</label
+      >
+      <div class="col-sm-9">
+        <ng-select
+          [multiple]="true"
+          [(ngModel)]="editObject.relatedStores"
+          name="stores"
+          [items]="stores"
+          bindLabel="name"
+          bindValue="storeURL"
+        >
+        </ng-select>
+      </div>
+    </div>
+
+    <!-- <div class="form-group row">
+            <label for="longDesMiddle2" class="label col-sm-3 col-form-label"
+              >Middle Description 2</label
+            >
+            <div class="col-sm-9">
+              <ckeditor
+                [editor]="Editor"
+                [config]="ckConfig"
+                [required]="true"
+                name="longDesMiddle1"
+                [(ngModel)]="editObject.longDesMiddle2"
+              ></ckeditor>
+            </div>
+          </div> -->
+
+    <br />
+    <div class="validation-checkboxes row justify-content-md-around">
+      <nb-checkbox
+        status="info"
+        name="showVertically"
+        [(ngModel)]="editObject.showVertically"
+        >Show Vertically</nb-checkbox
+      ><nb-checkbox
+        status="warning"
+        name="featuredForHome"
+        [(ngModel)]="editObject.featuredForHome"
+        >Featured for Home</nb-checkbox
+      >
+    </div>
+    <br />
+    <br />
+    <div class="form-group row">
+      <div class="offset-sm-1 col-sm-11">
+        <button
+          nbButton
+          status="primary"
+          size="medium"
+          [nbSpinner]="isUpdating"
+          nbSpinnerStatus="primary"
+          nbSpinnerSize="medium"
+          [disabled]="!editBlogForm.form.valid || !editBlogForm.dirty"
+          type="submit"
+        >
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>

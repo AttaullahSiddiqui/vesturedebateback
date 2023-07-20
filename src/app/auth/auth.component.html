@@ -1,0 +1,83 @@
+<nb-layout>
+  <nb-layout-column>
+    <div class="row loginContentDiv">
+      <div class="col-3"></div>
+      <div class="col-md-6">
+        <div class="header">
+          <h1 class="text-center text-primary">VestureDebate</h1>
+          <br />
+          <nb-card>
+            <nb-card-header class="mx-auto mt-2 mb-4"
+              >Authenticate Yourself First!</nb-card-header
+            >
+            <p class="text-center my-4">
+              If you don't have credentials, ask Admin to create account
+            </p>
+            <nb-card-body>
+              <form
+                class="form-horizontal"
+                novalidate
+                (ngSubmit)="authUser(userData)"
+              >
+                <div class="form-group row">
+                  <label
+                    for="userName"
+                    class="label col-sm-3 form-control-label"
+                    >Username</label
+                  >
+                  <div class="col-sm-9">
+                    <input
+                      type="text"
+                      status="info"
+                      nbInput
+                      fullWidth
+                      name="userName"
+                      placeholder="Enter User name"
+                      [(ngModel)]="userData.userName"
+                      #userName="ngModel"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label
+                    for="userPassword"
+                    class="label col-sm-3 form-control-label"
+                    >Password</label
+                  >
+                  <div class="col-sm-9">
+                    <input
+                      type="password"
+                      status="info"
+                      nbInput
+                      fullWidth
+                      name="userPassword"
+                      placeholder="Enter password"
+                      [(ngModel)]="userData.userPass"
+                      #userPass="ngModel"
+                      minlength="3"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="offset-sm-3 col-sm-9">
+                    <button
+                      type="submit"
+                      nbButton
+                      status="warning"
+                      [disabled]="userName.invalid || userPass.invalid"
+                    >
+                      Sign in
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </nb-card-body>
+          </nb-card>
+        </div>
+      </div>
+      <div class="col-3"></div>
+    </div>
+  </nb-layout-column>
+</nb-layout>

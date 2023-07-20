@@ -1,0 +1,110 @@
+<div class="row">
+  <div class="col-xxxl-3 col-md-6">
+    <nb-card size="large">
+      <nb-tabset fullWidth>
+        <nb-tab tabTitle="Users">
+          <div class="slider-container">
+            <ngx-temperature-dragger
+              [(value)]="users"
+              [(powerIcon)]="userIcon"
+              [min]="0"
+              [max]="20"
+              [disableArcColor]="theme.arcEmpty"
+              [fillColors]="theme.arcFill"
+              [thumbBg]="theme.thumbBg"
+              [thumbBorderColor]="theme.thumbBorder"
+            >
+              <div class="slider-value-container">
+                <div class="value h1">
+                  {{ users }}
+                </div>
+                <div class="desc">users</div>
+              </div>
+            </ngx-temperature-dragger>
+          </div>
+        </nb-tab>
+      </nb-tabset>
+    </nb-card>
+  </div>
+  <div class="col-xxxl-3 col-md-6">
+    <nb-card size="large">
+      <nb-tabset fullWidth>
+        <nb-tab tabTitle="Stores">
+          <div class="slider-container">
+            <ngx-temperature-dragger
+              [(value)]="stores"
+              [(powerIcon)]="storeIcon"
+              [min]="0"
+              [max]="1500"
+              [disableArcColor]="theme.arcEmpty"
+              [fillColors]="'#3366ff'"
+              [thumbBg]="theme.thumbBg"
+              [thumbBorderColor]="theme.thumbBorder"
+            >
+              <div class="slider-value-container">
+                <div class="value h1">
+                  {{ stores }}
+                </div>
+                <div class="desc">stores</div>
+              </div>
+            </ngx-temperature-dragger>
+          </div>
+        </nb-tab>
+      </nb-tabset>
+    </nb-card>
+  </div>
+  <div class="col-xxxl-3 col-md-6">
+    <nb-card size="large">
+      <nb-tabset fullWidth>
+        <nb-tab tabTitle="Coupons">
+          <div class="slider-container">
+            <ngx-temperature-dragger
+              [(value)]="coupons"
+              [(powerIcon)]="couponIcon"
+              [min]="0"
+              [max]="50000"
+              [disableArcColor]="theme.arcEmpty"
+              [fillColors]="'#ff708d'"
+              [thumbBg]="theme.thumbBg"
+              [thumbBorderColor]="theme.thumbBorder"
+            >
+              <div class="slider-value-container">
+                <div class="value h1">
+                  {{ coupons }}
+                </div>
+                <div class="desc">coupons</div>
+              </div>
+            </ngx-temperature-dragger>
+          </div>
+        </nb-tab>
+      </nb-tabset>
+    </nb-card>
+  </div>
+  <div class="col-xxxl-3 col-md-6">
+    <nb-card size="large">
+      <nb-tabset fullWidth>
+        <nb-tab tabTitle="Blogs">
+          <div class="slider-container">
+            <ngx-temperature-dragger
+              [(value)]="blogs"
+              [(powerIcon)]="blogIcon"
+              [min]="0"
+              [max]="50"
+              [disableArcColor]="theme.arcEmpty"
+              [fillColors]="'#42aaff'"
+              [thumbBg]="theme.thumbBg"
+              [thumbBorderColor]="theme.thumbBorder"
+            >
+              <div class="slider-value-container">
+                <div class="value h1">
+                  {{ blogs }}
+                </div>
+                <div class="desc">blogs</div>
+              </div>
+            </ngx-temperature-dragger>
+          </div>
+        </nb-tab>
+      </nb-tabset>
+    </nb-card>
+  </div>
+</div>

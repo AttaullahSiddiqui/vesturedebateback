@@ -1,0 +1,45 @@
+<div class="row" *ngIf="stores">
+  <div class="col-md-4">
+    <nb-card>
+      <nb-card-header>Overwrite Date</nb-card-header>
+      <nb-card-body>
+        <button
+          nbButton
+          status="danger"
+          size="medium"
+          (click)="reSort()"
+          [disabled]="!stores || reArranging"
+        >
+          Re-Arrange
+        </button>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<nb-card *ngIf="stores">
+  <nb-card-header>Sort Stores</nb-card-header>
+  <nb-card-body>
+    <table class="table table-responsive-sm table-hover table-outline mb-0">
+      <thead class="thead-light">
+        <tr>
+          <th style="font-size: 1.3em" width="20" class="text-center">S#</th>
+          <th>Stores</th>
+        </tr>
+      </thead>
+      <tbody [sortablejs]="stores" [sortablejsOptions]="options">
+        <tr
+          style="font-size: 1.15em"
+          *ngFor="let item of stores | keyvalue | orderby"
+        >
+          <td class="text-center" width="150">
+            {{ item.value.sortNo }}
+          </td>
+          <td>
+            <div>{{ item.value.name }}</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+</nb-card>

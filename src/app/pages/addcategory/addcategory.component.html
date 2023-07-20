@@ -1,0 +1,137 @@
+<div class="row">
+  <div class="col-md-10">
+    <nb-card>
+      <nb-card-header>Add User</nb-card-header>
+      <nb-card-body>
+        <form
+          #addCatForm="ngForm"
+          novalidate
+          (ngSubmit)="createCategory(catData)"
+        >
+          <div class="form-group row">
+            <label for="catName" class="label col-sm-3 col-form-label"
+              >Name</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="catName"
+                [(ngModel)]="catData.catName"
+                #catName="ngModel"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="slug" class="label col-sm-3 col-form-label"
+              >Category Slug</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="slug"
+                [(ngModel)]="catData.catSlug"
+                #catSlug="ngModel"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="metaTitle" class="label col-sm-3 col-form-label"
+              >Meta Title</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="metaTitle"
+                [(ngModel)]="catData.catMetaTitle"
+                #catMetaTitle="ngModel"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="MetaDescription" class="label col-sm-3 col-form-label"
+              >Meta Description</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="MetaDescription"
+                [(ngModel)]="catData.catMetaDescription"
+                #catMetaDescription="ngModel"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="MetaKeywords" class="label col-sm-3 col-form-label"
+              >Meta Keywords</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="MetaKeywords"
+                [(ngModel)]="catData.catMetaKeywords"
+                #catMetaKeywords="ngModel"
+                required
+              />
+            </div>
+          </div>
+          <div class="validation-checkboxes row justify-content-md-around">
+            <nb-checkbox
+              status="success"
+              name="featured"
+              [(ngModel)]="catData.catFeatured"
+              #catFeatured="ngModel"
+              >Featured for Home</nb-checkbox
+            >
+            <nb-checkbox
+              status="danger"
+              name="forBlogs"
+              [(ngModel)]="catData.forBlogs"
+              #catFeatured="ngModel"
+              >For Blogs</nb-checkbox
+            >
+          </div>
+          <!-- <div class="validation-checkboxes">
+            <nb-checkbox
+              status="danger"
+              name="forBlogs"
+              [(ngModel)]="catData.forBlogs"
+              #catFeatured="ngModel"
+              >For Blogs</nb-checkbox
+            >
+          </div> -->
+          <br />
+          <div class="form-group row">
+            <div class="offset-sm-3 col-sm-9">
+              <button
+                nbButton
+                status="primary"
+                size="medium"
+                [nbSpinner]="isBusy"
+                nbSpinnerStatus="primary"
+                nbSpinnerSize="medium"
+                [disabled]="!addCatForm.form.valid"
+                type="submit"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<nb-card>
+  <nb-card-header> All Users </nb-card-header>
+
+  <nb-card-body>
+    <h2 *ngIf="notAdmin">Only admins can change/modify Users!</h2>
+    <ng2-smart-table
+      [settings]="settings"
+      [source]="source"
+      (deleteConfirm)="onDeleteConfirm($event)"
+      (editConfirm)="onSaveConfirm($event)"
+      *ngIf="!notAdmin"
+    >
+    </ng2-smart-table>
+  </nb-card-body>
+</nb-card>

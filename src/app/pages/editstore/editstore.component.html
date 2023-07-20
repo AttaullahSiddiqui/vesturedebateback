@@ -1,0 +1,456 @@
+<div class="row" *ngIf="dataLoaded">
+  <div class="col-md-6" #myDiv>
+    <nb-card>
+      <nb-card-header>Please select Store</nb-card-header>
+      <nb-card-body>
+        <ng-select
+          appendTo="body"
+          class="forStore"
+          name="categoryRef"
+          [closeOnSelect]="true"
+          [searchable]="true"
+          [hideSelected]="true"
+          [(ngModel)]="storeArrayModel"
+          (change)="loadStoreDetails(storeArrayModel)"
+        >
+          <ng-option
+            [value]="data.value._id"
+            *ngFor="let data of dataLoaded | keyvalue | sortStores"
+          >
+            {{ data.value.name }}
+          </ng-option>
+        </ng-select>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-md-3">
+    <nb-card>
+      <nb-card-header>Delete Store</nb-card-header>
+      <nb-card-body style="padding-top: 10px !important">
+        <button
+          nbButton
+          status="danger"
+          size="medium"
+          [disabled]="!storeInfo"
+          (click)="openDeletePrompt()"
+        >
+          Delete
+        </button>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row" *ngIf="storeInfo">
+  <div class="col-md-10">
+    <nb-card>
+      <nb-card-header>Edit Store</nb-card-header>
+      <nb-card-body class="pr-3 pr-5">
+        <form
+          #editStoreForm="ngForm"
+          novalidate
+          (ngSubmit)="saveEditStoreToDB(storeInfo)"
+        >
+          <div class="form-group row">
+            <label for="offerBox" class="label col-sm-3 col-form-label"
+              >Store Name</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="name"
+                [(ngModel)]="storeInfo.name"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="storeURL" class="label col-sm-3 col-form-label"
+              >Store URL</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="storeURL"
+                [(ngModel)]="storeInfo.storeURL"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-3 label">Heading</label>
+            <div class="col-sm-9">
+              <nb-select
+                name="heading"
+                required
+                [(ngModel)]="storeInfo.heading"
+              >
+                <nb-option value="Promo codes & Coupons"
+                  >Promo codes & Coupons</nb-option
+                >
+                <nb-option value="Coupons & Promo codes"
+                  >Coupons & Promo codes</nb-option
+                >
+                <nb-option value="Voucher & Discount codes"
+                  >Voucher & Discount codes</nb-option
+                >
+              </nb-select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="shortDes" class="label col-sm-3 col-form-label"
+              >Short Description</label
+            >
+            <div class="col-sm-9">
+              <ckeditor
+                [editor]="Editor"
+                [config]="ckConfig"
+                [required]="true"
+                name="shortDes"
+                [(ngModel)]="storeInfo.shortDes"
+              ></ckeditor>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="longDes" class="label col-sm-3 col-form-label"
+              >Long Description</label
+            >
+            <div class="col-sm-9">
+              <ckeditor
+                [editor]="Editor"
+                [config]="ckConfig"
+                [required]="true"
+                name="longDes"
+                [(ngModel)]="storeInfo.longDes"
+              ></ckeditor>
+            </div>
+          </div>
+          <div class="row">
+            <div class="offset-md-2 com-md-8 text-center">
+              <img [src]="storeInfo.img" class="marginAuto" />
+            </div>
+          </div>
+          <div class="row" *ngIf="croppedImage">
+            <div class="offset-md-2 com-md-8 text-center">
+              <img [src]="croppedImage" class="marginAuto" />
+              <br />
+              <br />
+              <button
+                nbButton
+                status="danger"
+                size="medium"
+                (click)="clearCroppedImage()"
+              >
+                Clear
+              </button>
+              <br />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="imge" class="label col-sm-3 col-form-label"
+              >Image</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="file"
+                name="imge"
+                (change)="fileChangeEvent($event)"
+                [(ngModel)]="imgModel"
+                class="custom-file-input"
+                accept="image/x-png,image/jpeg"
+                aria-describedby="inputGroupFileAddon01"
+              />
+              <label class="custom-file-label" for="inputGroupFile01"
+                >{{ htmlContent }}{{ imgModel }}</label
+              >
+            </div>
+          </div>
+          <image-cropper
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="1 / 1"
+            outputType="file"
+            format="png"
+            (imageCropped)="imageCropped($event)"
+          >
+          </image-cropper>
+
+          <div class="form-group row">
+            <label for="imgAlt" class="label col-sm-3 col-form-label"
+              >Image Alt</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="imgAlt"
+                [(ngModel)]="storeInfo.imgAlt"
+              />
+            </div>
+          </div>
+          <div class="row" *ngIf="storeInfo.thumbImg">
+            <div class="offset-md-2 com-md-8 text-center">
+              <img [src]="storeInfo.thumbImg" class="marginAuto" />
+            </div>
+          </div>
+          <div class="row" *ngIf="croppedImage2">
+            <div class="offset-md-2 com-md-8 text-center">
+              <img [src]="croppedImage2" class="marginAuto" />
+              <br />
+              <br />
+              <button
+                nbButton
+                status="danger"
+                size="medium"
+                (click)="clearCroppedImage2()"
+              >
+                Clear
+              </button>
+              <br />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="imge2" class="label col-sm-3 col-form-label"
+              >Thumbnail Image</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="file"
+                name="imge2"
+                (change)="fileChangeEvent2($event)"
+                [(ngModel)]="imgModel2"
+                class="custom-file-input"
+                accept="image/x-png,image/jpeg"
+                aria-describedby="inputGroupFileAddon01"
+              />
+              <label class="custom-file-label" for="inputGroupFile02"
+                >{{ htmlContent2 }}{{ imgModel2 }}</label
+              >
+            </div>
+          </div>
+          <image-cropper
+            [imageChangedEvent]="imageChangedEvent2"
+            [maintainAspectRatio]="false"
+            [aspectRatio]="2 / 1"
+            outputType="file"
+            format="png"
+            (imageCropped)="imageCropped2($event)"
+          >
+          </image-cropper>
+          <div class="form-group row">
+            <label for="directUrl" class="label col-sm-3 col-form-label"
+              >Direct URL</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="directUrl"
+                [(ngModel)]="storeInfo.directUrl"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="trackUrl" class="label col-sm-3 col-form-label"
+              >Tracking URL</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="trackUrl"
+                [(ngModel)]="storeInfo.trackUrl"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="metaTitle" class="label col-sm-3 col-form-label"
+              >Meta Title</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="metaTitle"
+                [(ngModel)]="storeInfo.metaTitle"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="metaDes" class="label col-sm-3 col-form-label"
+              >Meta Description</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="metaDes"
+                [(ngModel)]="storeInfo.metaDes"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="metaKeywords" class="label col-sm-3 col-form-label"
+              ><b>Meta Keywords</b>(comma separated)</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="metaKeywords"
+                [(ngModel)]="storeInfo.metaKeywords"
+              />
+            </div>
+          </div>
+          <hr />
+          <div class="form-group row">
+            <label for="fb" class="label col-sm-3 col-form-label"
+              >Facebook</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="fb"
+                [(ngModel)]="storeInfo.fb"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="fb" class="label col-sm-3 col-form-label"
+              >Pinterest</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="pin"
+                [(ngModel)]="storeInfo.pin"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="wik" class="label col-sm-3 col-form-label"
+              >Wikipedia</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="wik"
+                [(ngModel)]="storeInfo.wik"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="twit" class="label col-sm-3 col-form-label"
+              >Twitter</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="twit"
+                [(ngModel)]="storeInfo.twit"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="gplus" class="label col-sm-3 col-form-label"
+              >Google Plus</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="gplus"
+                [(ngModel)]="storeInfo.gplus"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="android" class="label col-sm-3 col-form-label"
+              >Android App Link</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="android"
+                [(ngModel)]="storeInfo.android"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="ios" class="label col-sm-3 col-form-label"
+              >IOS App Link</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                name="ios"
+                [(ngModel)]="storeInfo.ios"
+              />
+            </div>
+          </div>
+          <br />
+          <div class="validation-checkboxes row justify-content-md-around">
+            <nb-checkbox
+              status="success"
+              name="topStore"
+              [(ngModel)]="storeInfo.topStore"
+              >Top Store</nb-checkbox
+            ><nb-checkbox
+              status="danger"
+              name="editorChoice"
+              [(ngModel)]="storeInfo.editorChoice"
+              >Editor's Choice</nb-checkbox
+            >
+          </div>
+          <br />
+          <br />
+          <div class="form-group row">
+            <div class="offset-sm-1 col-sm-11">
+              <button
+                nbButton
+                status="primary"
+                size="medium"
+                [nbSpinner]="updatingStore"
+                nbSpinnerStatus="primary"
+                nbSpinnerSize="medium"
+                [disabled]="!editStoreForm.form.valid || !editStoreForm.dirty"
+                type="submit"
+              >
+                Update Store
+              </button>
+            </div>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

@@ -1,0 +1,451 @@
+<div class="col-12">
+  <nb-card>
+    <nb-tabset fullWidth (changeTab)="changeTab()">
+      <nb-tab tabTitle="Slider 1">
+        <br />
+        <div class="colors text-center ml-5">
+          <div class="item text-heading">
+            <div class="color bg-heading"></div>
+            <div>
+              <h2 class="text-heading text-center">Add Image for Slider 1</h2>
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <form
+          #addSlider1="ngForm"
+          novalidate
+          (ngSubmit)="uploadImageFirst(firstSlide, 1)"
+          class="pl-2 pr-4"
+        >
+          <div class="form-group row">
+            <label for="offerBox" class="label col-sm-3 col-form-label"
+              >Link</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="link"
+                [(ngModel)]="firstSlide.link"
+              />
+            </div>
+          </div>
+          <br>
+          <div class="row" *ngIf="croppedImage">
+            <div class="offset-md-2 com-md-8 text-center">
+              <img [src]="croppedImage" class="marginAuto" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="imge" class="label col-sm-3 col-form-label"
+              >Image</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="file"
+                name="imge"
+                (change)="fileChangeEvent($event)"
+                required
+                [(ngModel)]="imgModel"
+                class="custom-file-input"
+                accept="image/x-png,image/jpeg"
+              />
+              <label class="custom-file-label" for="inputGroupFile01"
+                >{{ htmlContent }}{{ imgModel }}</label
+              >
+            </div>
+          </div>
+          <image-cropper
+            *ngIf="imgModel"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="8 / 3.2"
+            outputType="file"
+            format="jpeg"
+            (imageCropped)="imageCropped($event)"
+            [resizeToWidth]="1900"
+            [resizeToHeight]="900"
+          ></image-cropper>
+          <br />
+          <div class="form-group row">
+            <div class="offset-sm-1 col-sm-11">
+              <button
+                nbButton
+                status="primary"
+                size="medium"
+                [nbSpinner]="trickyArr[1]"
+                nbSpinnerStatus="primary"
+                nbSpinnerSize="medium"
+                [disabled]="!addSlider1.form.valid"
+                type="submit"
+              >
+                Add Slide
+              </button>
+            </div>
+          </div>
+        </form>
+      </nb-tab>
+      <nb-tab tabTitle="Slider 2">
+        <br />
+        <div class="colors text-center ml-5">
+          <div class="item text-heading">
+            <div class="color bg-heading"></div>
+            <div>
+              <h2 class="text-heading text-center">Add Image for Slider 2</h2>
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <form
+          #addSlider2="ngForm"
+          novalidate
+          (ngSubmit)="uploadImageFirst(secondSlide, 2)"
+          class="pl-2 pr-4"
+        >
+          <div class="form-group row">
+            <label for="offerBox" class="label col-sm-3 col-form-label"
+              >Link</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="link"
+                [(ngModel)]="secondSlide.link"
+              />
+            </div>
+          </div>
+          <br>
+          <div class="row" *ngIf="croppedImage">
+            <div class="offset-md-2 com-md-8 text-center">
+              <img [src]="croppedImage" class="marginAuto" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="imge" class="label col-sm-3 col-form-label"
+              >Image</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="file"
+                name="imge"
+                (change)="fileChangeEvent($event)"
+                required
+                [(ngModel)]="imgModel2"
+                class="custom-file-input"
+                accept="image/x-png,image/jpeg"
+              />
+              <label class="custom-file-label" for="inputGroupFile01"
+                >{{ htmlContent }}{{ imgModel2 }}</label
+              >
+            </div>
+          </div>
+          <image-cropper
+            *ngIf="imgModel2"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="8 / 3.2"
+            outputType="file"
+            format="jpeg"
+            (imageCropped)="imageCropped($event)"
+            [resizeToWidth]="1900"
+            [resizeToHeight]="900"
+          ></image-cropper>
+          <br />
+          <div class="form-group row">
+            <div class="offset-sm-1 col-sm-11">
+              <button
+                nbButton
+                status="primary"
+                size="medium"
+                [nbSpinner]="trickyArr[2]"
+                nbSpinnerStatus="primary"
+                nbSpinnerSize="medium"
+                [disabled]="!addSlider2.form.valid"
+                type="submit"
+              >
+                Add Slide
+              </button>
+            </div>
+          </div>
+        </form>
+      </nb-tab>
+      <nb-tab tabTitle="Slider 3">
+        <br />
+        <div class="colors text-center ml-5">
+          <div class="item text-heading">
+            <div class="color bg-heading"></div>
+            <div>
+              <h2 class="text-heading text-center">Add Image for Slider 3</h2>
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <form
+          #addSlider3="ngForm"
+          novalidate
+          (ngSubmit)="uploadImageFirst(thirdSlide, 3)"
+          class="pl-2 pr-4"
+        >
+          <div class="form-group row">
+            <label for="offerBox" class="label col-sm-3 col-form-label"
+              >Link</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="link"
+                [(ngModel)]="thirdSlide.link"
+              />
+            </div>
+          </div>
+          <br>
+          <div class="row" *ngIf="croppedImage">
+            <div class="offset-md-2 com-md-8 text-center">
+              <img [src]="croppedImage" class="marginAuto" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="imge" class="label col-sm-3 col-form-label"
+              >Image</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="file"
+                name="imge"
+                (change)="fileChangeEvent($event)"
+                required
+                [(ngModel)]="imgModel3"
+                class="custom-file-input"
+                accept="image/x-png,image/jpeg"
+              />
+              <label class="custom-file-label" for="inputGroupFile01"
+                >{{ htmlContent }}{{ imgModel3 }}</label
+              >
+            </div>
+          </div>
+          <image-cropper
+            *ngIf="imgModel3"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="8 / 3.2"
+            outputType="file"
+            format="jpeg"
+            (imageCropped)="imageCropped($event)"
+            [resizeToWidth]="1900"
+            [resizeToHeight]="900"
+          ></image-cropper>
+          <br />
+          <div class="form-group row">
+            <div class="offset-sm-1 col-sm-11">
+              <button
+                nbButton
+                status="primary"
+                size="medium"
+                [nbSpinner]="trickyArr[3]"
+                nbSpinnerStatus="primary"
+                nbSpinnerSize="medium"
+                [disabled]="!addSlider3.form.valid"
+                type="submit"
+              >
+                Add Slide
+              </button>
+            </div>
+          </div>
+        </form>
+      </nb-tab>
+      <nb-tab tabTitle="Slider 4">
+        <br />
+        <div class="colors text-center ml-5">
+          <div class="item text-heading">
+            <div class="color bg-heading"></div>
+            <div>
+              <h2 class="text-heading text-center">Add Image for Slider 4</h2>
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <form
+          #addSlider4="ngForm"
+          novalidate
+          (ngSubmit)="uploadImageFirst(fourthSlide, 4)"
+          class="pl-2 pr-4"
+        >
+          <div class="form-group row">
+            <label for="offerBox" class="label col-sm-3 col-form-label"
+              >Link</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="link"
+                [(ngModel)]="fourthSlide.link"
+              />
+            </div>
+          </div>
+          <br>
+          <div class="row" *ngIf="croppedImage">
+            <div class="offset-md-2 com-md-8 text-center">
+              <img [src]="croppedImage" class="marginAuto" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="imge" class="label col-sm-3 col-form-label"
+              >Image</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="file"
+                name="imge"
+                (change)="fileChangeEvent($event)"
+                required
+                [(ngModel)]="imgModel4"
+                class="custom-file-input"
+                accept="image/x-png,image/jpeg"
+              />
+              <label class="custom-file-label" for="inputGroupFile01"
+                >{{ htmlContent }}{{ imgModel4 }}</label
+              >
+            </div>
+          </div>
+          <image-cropper
+            *ngIf="imgModel4"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="8 / 3.2"
+            outputType="file"
+            format="jpeg"
+            (imageCropped)="imageCropped($event)"
+            [resizeToWidth]="1900"
+            [resizeToHeight]="900"
+          ></image-cropper>
+          <br />
+          <div class="form-group row">
+            <div class="offset-sm-1 col-sm-11">
+              <button
+                nbButton
+                status="primary"
+                size="medium"
+                [nbSpinner]="trickyArr[4]"
+                nbSpinnerStatus="primary"
+                nbSpinnerSize="medium"
+                [disabled]="!addSlider4.form.valid"
+                type="submit"
+              >
+                Add Slide
+              </button>
+            </div>
+          </div>
+        </form>
+      </nb-tab>
+      <nb-tab tabTitle="Slider 5">
+        <br />
+        <div class="colors text-center ml-5">
+          <div class="item text-heading">
+            <div class="color bg-heading"></div>
+            <div>
+              <h2 class="text-heading text-center">Add Image for Slider 5</h2>
+            </div>
+          </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <form
+          #addSlider5="ngForm"
+          novalidate
+          (ngSubmit)="uploadImageFirst(fifthSlide, 5)"
+          class="pl-2 pr-4"
+        >
+          <div class="form-group row">
+            <label for="offerBox" class="label col-sm-3 col-form-label"
+              >Link</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                required
+                name="link"
+                [(ngModel)]="fifthSlide.link"
+              />
+            </div>
+          </div>
+          <br>
+          <div class="row" *ngIf="croppedImage">
+            <div class="offset-md-2 com-md-8 text-center">
+              <img [src]="croppedImage" class="marginAuto" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="imge" class="label col-sm-3 col-form-label"
+              >Image</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="file"
+                name="imge"
+                (change)="fileChangeEvent($event)"
+                required
+                [(ngModel)]="imgModel5"
+                class="custom-file-input"
+                accept="image/x-png,image/jpeg"
+              />
+              <label class="custom-file-label" for="inputGroupFile01"
+                >{{ htmlContent }}{{ imgModel5 }}</label
+              >
+            </div>
+          </div>
+          <image-cropper
+            *ngIf="imgModel5"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="8 / 3.2"
+            outputType="file"
+            format="jpeg"
+            (imageCropped)="imageCropped($event)"
+            [resizeToWidth]="1900"
+            [resizeToHeight]="900"
+          ></image-cropper>
+          <br />
+          <div class="form-group row">
+            <div class="offset-sm-1 col-sm-11">
+              <button
+                nbButton
+                status="primary"
+                size="medium"
+                [nbSpinner]="trickyArr[5]"
+                nbSpinnerStatus="primary"
+                nbSpinnerSize="medium"
+                [disabled]="!addSlider5.form.valid"
+                type="submit"
+              >
+                Add Slide
+              </button>
+            </div>
+          </div>
+        </form>
+      </nb-tab>
+    </nb-tabset>
+  </nb-card>
+</div>

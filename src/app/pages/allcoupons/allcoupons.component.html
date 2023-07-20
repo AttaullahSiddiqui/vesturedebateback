@@ -1,0 +1,240 @@
+<div class="row" *ngIf="storeArray">
+  <div class="col-md-6" #myDiv>
+    <nb-card>
+      <nb-card-header>Please select Store</nb-card-header>
+      <nb-card-body>
+        <ng-select
+          class="forStore"
+          name="selectedStore"
+          [closeOnSelect]="true"
+          [searchable]="true"
+          [hideSelected]="true"
+          [(ngModel)]="selectedStore"
+          (change)="loadCoupons(selectedStore)"
+        >
+          <ng-option
+            [value]="data.value._id"
+            *ngFor="let data of storeArray | keyvalue"
+          >
+            {{ data.value.name }}
+          </ng-option>
+        </ng-select>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-md-6" *ngIf="dataLoaded">
+    <nb-card>
+      <nb-card-header>Overwrite Date</nb-card-header>
+      <nb-card-body style="padding-top: 10px !important; padding-bottom: 0">
+        <form>
+          <div class="form-group row">
+            <div class="col-sm-9">
+              <input
+                nbInput
+                name="expDate"
+                placeholder="Click to select Date"
+                name="expDate"
+                required
+                [(ngModel)]="overallDate"
+                [nbDatepicker]="formpicker"
+              />
+              <nb-datepicker #formpicker></nb-datepicker>
+            </div>
+            <div class="col-md-3">
+              <button
+                nbButton
+                status="primary"
+                size="medium"
+                [nbSpinner]="overBusy"
+                nbSpinnerStatus="primary"
+                nbSpinnerSize="medium"
+                [disabled]="!overallDate"
+                (click)="changeOverallDate()"
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<nb-card *ngIf="dataLoaded">
+  <nb-card-header>
+    Total Coupons on Website &nbsp;&nbsp;
+    <button nbButton status="primary" size="medium">
+      {{ couponCount }}
+    </button></nb-card-header
+  >
+  <nb-card-body>
+    <ng2-smart-table
+      [settings]="settings"
+      [source]="source"
+      (edit)="openEditForm($event, couponEditModal)"
+      (delete)="openDeletePrompt($event)"
+    >
+    </ng2-smart-table>
+  </nb-card-body>
+</nb-card>
+<div></div>
+<ng-template #couponEditModal let-data>
+  <form
+    #editCouponForm="ngForm"
+    novalidate
+    (ngSubmit)="saveEditedCoupon(editObject)"
+  >
+    <div class="form-group row">
+      <label for="offerBox" class="label col-sm-3 col-form-label"
+        >Offer Box</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          [(ngModel)]="editObject.offerBox"
+          required
+          name="offerBox"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="offerDetail" class="label col-sm-3 col-form-label"
+        >Offer Details</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          [(ngModel)]="editObject.offerDetail"
+          required
+          name="offerDetail"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="assignedStore" class="label col-sm-3 col-form-label"
+        >Choose Store</label
+      >
+      <div class="col-sm-9">
+        <ng-select
+          name="assignedStore"
+          [closeOnSelect]="true"
+          [searchable]="true"
+          [hideSelected]="true"
+          [(ngModel)]="editObject.storeId"
+          (change)="fetchTrackingLink(editObject.storeId)"
+        >
+          <ng-option
+            [value]="item.value._id"
+            *ngFor="let item of storeArray | keyvalue | sortStores"
+          >
+            {{ item.value.name }}
+          </ng-option>
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="expDate" class="label col-sm-3 col-form-label"
+        >Expiry Date</label
+      >
+      <div class="col-sm-9">
+        <input
+          nbInput
+          name="expDate"
+          placeholder="Click to select Date"
+          [(ngModel)]="editObject.expDate"
+          required
+          [nbDatepicker]="formpicker"
+        />
+        <nb-datepicker #formpicker></nb-datepicker>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="trackingLink" class="label col-sm-3 col-form-label"
+        >Tracking Link</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          [(ngModel)]="editObject.trackingLink"
+          required
+          name="trackingLink"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="activeStatus" class="label col-sm-3 col-form-label"
+        >Select Mode</label
+      >
+      <div class="col-sm-9" name="activeStatus">
+        <nb-radio-group [(value)]="editObject.activeStatus">
+          <nb-radio [value]="false">Code</nb-radio>
+          <nb-radio [value]="true">Active</nb-radio>
+        </nb-radio-group>
+      </div>
+    </div>
+    <div class="form-group row" *ngIf="!editObject.activeStatus">
+      <label for="trackingLink" class="label col-sm-3 col-form-label"
+        >Enter Code</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          [(ngModel)]="editObject.code"
+          required
+          name="code"
+          placeholder="Enter code here"
+        />
+      </div>
+    </div>
+    <div class="validation-checkboxes row justify-content-md-between">
+      <nb-checkbox
+        status="success"
+        name="featuredForHome"
+        [(ngModel)]="editObject.featuredForHome"
+        >Featured for Home</nb-checkbox
+      ><nb-checkbox
+        status="danger"
+        name="trending"
+        [(ngModel)]="editObject.trending"
+        >Trending</nb-checkbox
+      ><nb-checkbox
+        status="info"
+        name="newArrival"
+        [(ngModel)]="editObject.newArrival"
+        >New Arrival</nb-checkbox
+      ><nb-checkbox
+        status="warning"
+        name="forEvent"
+        [(ngModel)]="editObject.forEvent"
+        >Show on Event Page</nb-checkbox
+      >
+    </div>
+    <br />
+    <br />
+    <div class="form-group row">
+      <div class="col-md-4">
+        <button
+          nbButton
+          status="primary"
+          size="medium"
+          [nbSpinner]="isBusy"
+          nbSpinnerStatus="primary"
+          nbSpinnerSize="medium"
+          [disabled]="!editCouponForm.form.valid || !editCouponForm.dirty"
+          type="submit"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>

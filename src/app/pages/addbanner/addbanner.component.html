@@ -1,0 +1,331 @@
+<div class="row" *ngIf="storeArray">
+  <div class="col-md-6" #myDiv>
+    <nb-card>
+      <nb-card-header>Select Store for Banners</nb-card-header>
+      <nb-card-body>
+        <ng-select
+          appendTo="body"
+          class="forStore"
+          name="selectedStore"
+          [closeOnSelect]="true"
+          [searchable]="true"
+          [hideSelected]="true"
+          [(ngModel)]="selectedStore"
+          (change)="loadBannersFunc(selectedStore)"
+        >
+          <ng-option
+            [value]="data.value._id"
+            *ngFor="let data of storeArray | keyvalue | sortStores"
+          >
+            {{ data.value.name }}
+          </ng-option>
+        </ng-select>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-md-3">
+    <nb-card>
+      <nb-card-header>Add Banner</nb-card-header>
+      <nb-card-body style="padding-top: 10px !important">
+        <button
+          nbButton
+          status="success"
+          size="medium"
+          (click)="showAddModal(bannerAddModal)"
+          [disabled]="!noDataFoundForStore && !dataLoaded"
+        >
+          Add
+        </button>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row" *ngIf="dataLoaded">
+  <div class="col-md-12">
+    <div class="row">
+      <div
+        class="col-lg-3 col-md-4 col-sm-12 h-auto thumb text-center"
+        *ngFor="let data of banners | keyvalue | orderby"
+      >
+        <i class="fa fa-trash closeBtn" (click)="showDltModal(data.key)"></i>
+        <i
+          class="fa fa-edit editBtn"
+          (click)="showEditModal(data.key, data.value, bannerEditModal)"
+        ></i>
+        <img
+          [src]="data.value.img"
+          class="zoom img-fluid"
+          [ngClass]="{ transition: data.value.trigger }"
+          (mouseenter)="data.value.trigger = true"
+          (mouseleave)="data.value.trigger = false"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #bannerAddModal let-data>
+  <form
+    #addBannerForm="ngForm"
+    novalidate
+    (ngSubmit)="publishBanner(addObject)"
+  >
+    <div class="form-group row">
+      <label for="about" class="label col-sm-3 col-form-label"
+        >About Banner</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="about"
+          required
+          [(ngModel)]="addObject.about"
+        />
+      </div>
+    </div>
+    <div class="row" *ngIf="croppedImage">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage" class="marginAuto" />
+        <br />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label">Image</label>
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event)"
+          [(ngModel)]="imgModel"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+          aria-describedby="inputGroupFileAddon01"
+        />
+        <label class="custom-file-label" for="inputGroupFile01"
+          >{{ htmlContent }}{{ imgModel }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="3 / 5"
+      outputType="file"
+      format="png"
+      (imageCropped)="imageCropped($event)"
+    >
+    </image-cropper>
+    <div class="form-group row">
+      <label for="catId" class="label col-sm-3 col-form-label"
+        >Choose Category</label
+      >
+      <div class="col-sm-9">
+        <ng-select
+          required
+          [multiple]="true"
+          [closeOnSelect]="true"
+          [searchable]="true"
+          [hideSelected]="true"
+          [(ngModel)]="addObject.catId"
+          name="catId"
+          bindLabel="name"
+          bindValue="_id"
+          [items]="catArray"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="trackingLink" class="label col-sm-3 col-form-label"
+        >Tracking Link</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          [(ngModel)]="addObject.trackingLink"
+          required
+          name="trackingLink"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="sortNo" class="label col-sm-3 col-form-label"
+        >Position Number</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="number"
+          nbInput
+          min="1"
+          fullWidth
+          name="sortNo"
+          required
+          [(ngModel)]="addObject.sortNo"
+        />
+      </div>
+    </div>
+    <br />
+    <div class="form-group row">
+      <div class="col-md-4">
+        <button
+          nbButton
+          status="primary"
+          size="medium"
+          [nbSpinner]="isBusy"
+          nbSpinnerStatus="primary"
+          nbSpinnerSize="medium"
+          [disabled]="
+            !addBannerForm.form.valid || !addBannerForm.dirty || !croppedImage
+          "
+          type="submit"
+        >
+          Publish
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+<ng-template #bannerEditModal let-data>
+  <form
+    #editBannerForm="ngForm"
+    novalidate
+    (ngSubmit)="saveEditedBanner(editObject)"
+  >
+    <div class="form-group row">
+      <label for="about" class="label col-sm-3 col-form-label"
+        >About Banner</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          name="about"
+          required
+          [(ngModel)]="editObject.about"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="editObject.img" class="marginAuto" />
+      </div>
+    </div>
+    <br />
+    <div class="row" *ngIf="croppedImage">
+      <div class="offset-md-2 com-md-8 text-center">
+        <img [src]="croppedImage" class="marginAuto" />
+        <br />
+        <br />
+        <button
+          nbButton
+          status="danger"
+          size="medium"
+          (click)="clearCroppedImage()"
+        >
+          Clear
+        </button>
+        <br />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="imge" class="label col-sm-3 col-form-label">Image</label>
+      <div class="col-sm-9">
+        <input
+          type="file"
+          name="imge"
+          (change)="fileChangeEvent($event)"
+          [(ngModel)]="imgModel"
+          class="custom-file-input"
+          accept="image/x-png,image/jpeg"
+          aria-describedby="inputGroupFileAddon01"
+        />
+        <label class="custom-file-label" for="inputGroupFile01"
+          >{{ htmlContent }}{{ imgModel }}</label
+        >
+      </div>
+    </div>
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="3 / 5"
+      outputType="file"
+      format="png"
+      (imageCropped)="imageCropped($event)"
+    >
+    </image-cropper>
+    <div class="form-group row">
+      <label for="catId" class="label col-sm-3 col-form-label"
+        >Choose Category</label
+      >
+      <div class="col-sm-9">
+        <ng-select
+          required
+          [multiple]="true"
+          [closeOnSelect]="true"
+          [searchable]="true"
+          [hideSelected]="true"
+          [(ngModel)]="editObject.catId"
+          name="catId"
+          bindLabel="name"
+          bindValue="_id"
+          [items]="catArray"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="trackingLink" class="label col-sm-3 col-form-label"
+        >Tracking Link</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="text"
+          nbInput
+          fullWidth
+          [(ngModel)]="editObject.trackingLink"
+          required
+          name="trackingLink"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="sortNo" class="label col-sm-3 col-form-label"
+        >Position Number</label
+      >
+      <div class="col-sm-9">
+        <input
+          type="number"
+          nbInput
+          min="1"
+          fullWidth
+          name="sortNo"
+          required
+          [(ngModel)]="editObject.sortNo"
+        />
+      </div>
+    </div>
+    <br />
+    <div class="form-group row">
+      <div class="col-md-4">
+        <button
+          nbButton
+          status="primary"
+          size="medium"
+          [nbSpinner]="isBusy"
+          nbSpinnerStatus="primary"
+          nbSpinnerSize="medium"
+          [disabled]="!editBannerForm.form.valid || !editBannerForm.dirty"
+          type="submit"
+        >
+          Update
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>

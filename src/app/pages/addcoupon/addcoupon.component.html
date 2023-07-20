@@ -1,0 +1,201 @@
+<div class="row">
+  <div class="col-md-10">
+    <nb-card>
+      <nb-card-header>Add Coupon</nb-card-header>
+      <nb-card-body>
+        <form
+          #addCouponForm="ngForm"
+          novalidate
+          (ngSubmit)="addCoupon(couponInfo)"
+        >
+          <div class="form-group row">
+            <label for="offerBox" class="label col-sm-3 col-form-label"
+              >Offer Box</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                [(ngModel)]="couponInfo.offerBox"
+                required
+                name="offerBox"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="offerDetail" class="label col-sm-3 col-form-label"
+              >Offer Details</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                [(ngModel)]="couponInfo.offerDetail"
+                required
+                name="offerDetail"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="assignedStore" class="label col-sm-3 col-form-label"
+              >Choose Store</label
+            >
+            <div class="col-sm-9">
+              <ng-select
+                name="assignedStore"
+                [closeOnSelect]="true"
+                [searchable]="true"
+                [hideSelected]="true"
+                [(ngModel)]="couponInfo.storeId"
+                (change)="fetchTrackingLink(couponInfo.storeId)"
+              >
+                <ng-option
+                  [value]="item.value._id"
+                  *ngFor="let item of stores | keyvalue | sortStores"
+                >
+                  {{ item.value.name }}
+                </ng-option>
+              </ng-select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="expDate" class="label col-sm-3 col-form-label"
+              >Expiry Date</label
+            >
+            <div class="col-sm-9">
+              <input
+                nbInput
+                name="expDate"
+                placeholder="Click to select Date"
+                [(ngModel)]="couponInfo.expDate"
+                required
+                [nbDatepicker]="formpicker"
+              />
+              <nb-datepicker #formpicker></nb-datepicker>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="trackingLink" class="label col-sm-3 col-form-label"
+              >Tracking Link</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                [(ngModel)]="couponInfo.trackingLink"
+                required
+                name="trackingLink"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="activeStatus" class="label col-sm-3 col-form-label"
+              >Select Mode</label
+            >
+            <div class="col-sm-9" name="activeStatus">
+              <nb-radio-group [(value)]="couponInfo.activeStatus">
+                <nb-radio [value]="false">Code</nb-radio>
+                <nb-radio [value]="true">Active</nb-radio>
+              </nb-radio-group>
+            </div>
+          </div>
+          <!-- <div class="form-group row">
+            <label for="activeStatus" class="label col-sm-3 col-form-label"
+              >Code</label
+            >
+            <div class="col-sm-9">
+              <nb-radio
+                (change)="couponInfo.activeStatus = !couponInfo.activeStatus"
+                name="activeStatus"
+                value="false"
+              >
+              </nb-radio>
+            </div>
+          </div> -->
+          <!-- <div class="form-group row">
+            <label for="MetaKeywords" class="label col-sm-3 col-form-label"
+              >Active</label
+            >
+            <div class="col-sm-9">
+              <nb-radio
+                (change)="couponInfo.activeStatus = !couponInfo.activeStatus"
+                name="activeStatus"
+                value="true"
+                checked="checked"
+              >
+              </nb-radio>
+            </div>
+          </div> -->
+          <div class="form-group row" *ngIf="!couponInfo.activeStatus">
+            <label for="trackingLink" class="label col-sm-3 col-form-label"
+              >Enter Code</label
+            >
+            <div class="col-sm-9">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                [(ngModel)]="couponInfo.code"
+                required
+                name="code"
+                placeholder="Enter code here"
+              />
+            </div>
+          </div>
+          <div class="validation-checkboxes row justify-content-md-between">
+            <nb-checkbox
+              status="success"
+              name="featuredForHome"
+              [(ngModel)]="couponInfo.featuredForHome"
+              >Featured for Home</nb-checkbox
+            ><nb-checkbox
+              status="danger"
+              name="trending"
+              [(ngModel)]="couponInfo.trending"
+              >Trending</nb-checkbox
+            ><nb-checkbox
+              status="info"
+              name="newArrival"
+              [(ngModel)]="couponInfo.newArrival"
+              >New Arrival</nb-checkbox
+            ><nb-checkbox
+              status="warning"
+              name="forEvent"
+              [(ngModel)]="couponInfo.forEvent"
+              >Show on Event Page</nb-checkbox
+            >
+          </div>
+          <!-- <div class="validation-checkboxes">
+            
+          </div>
+          <div class="validation-checkboxes">
+            
+          </div>
+          <div class="validation-checkboxes">
+            
+          </div> -->
+          <br />
+          <div class="form-group row">
+            <div class="offset-sm-3 col-sm-9">
+              <button
+                nbButton
+                status="primary"
+                size="medium"
+                [nbSpinner]="isBusy"
+                nbSpinnerStatus="primary"
+                nbSpinnerSize="medium"
+                [disabled]="!addCouponForm.form.valid"
+                type="submit"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
